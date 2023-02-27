@@ -3,7 +3,7 @@ model:
   K: 1
   prompt_template: "a photo of x x"
   clip_model: "ViT-L/14"
-  res_w: 0
+  res_w: 0.5
   SA_K: 1
   width_img: 1024
   width_txt: 768
@@ -21,6 +21,7 @@ train:
   seed: 0
   epochs: 30
   epoch_start: 0
+  epoch_round: 10
   save_path: data/model/ut-zappos/zzsp
   best_model_metric: best_loss     #best_unseen  best_seen AUC best_loss best_hm
   save_model: True

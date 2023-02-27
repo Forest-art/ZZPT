@@ -74,42 +74,41 @@ def train_model(model, optimizer, config, train_dataset, val_dataset, test_datas
         if (i + 1) % config.save_every_n == 0:
             torch.save(model.state_dict(), os.path.join(config.save_path, f"{config.fusion}_epoch_{i}.pt"))
         
-        if i < 0:
-            print("First Stage: Evaluating val dataset for objects:")
-            logging.info("First Stage: Evaluating val dataset for objects:")
-            test_model(model, val_dataset, i)
-            print("First Stage: Evaluating test dataset for objects:")
-            logging.info("First Stage: Evaluating test dataset for objects:")
-            test_model(model, test_dataset, i)
-
+        if i // config.epoch_round % 3 == 0:
+            print("Training the object")
+        elif i // config.epoch_round % 3 == 1:
+            print("Training the state")
         else:
-            print("Evaluating val dataset:")
-            logging.info("Evaluating val dataset:")
-            loss_avg, val_result = evaluate(model, val_dataset, i)
-            print("Loss average on val dataset: {}".format(loss_avg))
-            print("Evaluating test dataset:")
-            logging.info("Evaluating test dataset:")
-            evaluate(model, test_dataset, i)
-            if config.best_model_metric == "best_loss":
-                if loss_avg.cpu().float() < best_loss:
-                    best_loss = loss_avg.cpu().float()
-                    print("Evaluating test dataset:")
-                    evaluate(model, test_dataset, i)
-                    torch.save(model.state_dict(), os.path.join(
-                    config.save_path, f"{config.fusion}_best.pt"
-                ))
-            else:
-                if val_result[config.best_model_metric] > best_metric:
-                    best_metric = val_result[config.best_model_metric]
-                    print("Evaluating test dataset:")
-                    evaluate(model, test_dataset, i)
-                    torch.save(model.state_dict(), os.path.join(
-                    config.save_path, f"{config.fusion}_best.pt"
-                ))
-            if i + 1 == config.epochs:
-                print("Evaluating test dataset on Closed World")
-                model.load_state_dict(torch.load(os.path.join(config.save_path, f"{config.fusion}_best.pt")))
+            print("Training the state and object")
+
+
+        print("Evaluating val dataset:")
+        logging.info("Evaluating val dataset:")
+        loss_avg, val_result = evaluate(model, val_dataset, i)
+        print("Loss average on val dataset: {}".format(loss_avg))
+        print("Evaluating test dataset:")
+        logging.info("Evaluating test dataset:")
+        evaluate(model, test_dataset, i)
+        if config.best_model_metric == "best_loss":
+            if loss_avg.cpu().float() < best_loss:
+                best_loss = loss_avg.cpu().float()
+                print("Evaluating test dataset:")
                 evaluate(model, test_dataset, i)
+                torch.save(model.state_dict(), os.path.join(
+                config.save_path, f"{config.fusion}_best.pt"
+            ))
+        else:
+            if val_result[config.best_model_metric] > best_metric:
+                best_metric = val_result[config.best_model_metric]
+                print("Evaluating test dataset:")
+                evaluate(model, test_dataset, i)
+                torch.save(model.state_dict(), os.path.join(
+                config.save_path, f"{config.fusion}_best.pt"
+            ))
+        if i + 1 == config.epochs:
+            print("Evaluating test dataset on Closed World")
+            model.load_state_dict(torch.load(os.path.join(config.save_path, f"{config.fusion}_best.pt")))
+            evaluate(model, test_dataset, i)
 
 
 
@@ -184,7 +183,7 @@ def test_model(model, dataset, epoch):
         torch.cat(all_obj_gt).to("cpu"),
         torch.cat(all_pair_gt).to("cpu"),
     )
-    if epoch < 5:
+    if epoch%3 == 0:
         obj_acc = len(all_pred[all_pred==all_obj_gt]) / len(all_pred)
         print("Test attribute accuracy: ", 0, "Test object accuracy: ", obj_acc)
     else:

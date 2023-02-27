@@ -38,9 +38,13 @@ class ZZSP(nn.Module):
         self.soft_prompt = nn.Parameter(ctx_vectors).cuda()
         self.soft_prompt.requires_grad = False
 
-        self.attr_mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
-        self.obj_mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
-        self.com_mlp = MLP(768 * 2, 768, 2, True, True, True, True, [1280, 512])
+        self.attr_mlp = ResidualAttentionBlock(768, 768, None)
+        self.obj_mlp = ResidualAttentionBlock(768, 768, None)
+        self.com_mlp = CrossResidualAttentionBlock(768, 768, None)
+
+        # self.attr_mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
+        # self.obj_mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
+        # self.com_mlp = MLP(768 * 2, 768, 2, True, True, True, True, [1280, 512])
 
         self.weight = config.res_w
 
@@ -199,18 +203,19 @@ class ZZSP(nn.Module):
         normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
 
         #### Text Encoder
-        if epoch < 5:
+        if epoch // self.config.epoch_round % 3 == 0:
             # batch_img, img_ft = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
             # batch_img = self.obj_mlp(batch_img.type(torch.float)).type(self.clip.dtype)
             # # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_attr
             # normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
             self.soft_att.requires_grad = False
+            self.soft_obj.requires_grad = True
             token_tensors = self.construct_token_tensors(idx)
             text_features, text_ft = self.text_encoder(self.token_ids, token_tensors, enable_pos_emb=self.enable_pos_emb)  
             idx_text_features = text_features / text_features.norm(dim=-1, keepdim=True)
             logits = (self.clip.logit_scale.exp() * normalized_img @ idx_text_features.t())  
             loss = self.loss_fn(logits, batch_target)
-        elif epoch < 10:
+        elif epoch // self.config.epoch_round %3 == 1:
             # # self.obj_mlp.requires_grad = False
             # batch_img, img_ft = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
             # # batch_img_obj = self.obj_mlp(batch_img.type(torch.float))
@@ -218,6 +223,7 @@ class ZZSP(nn.Module):
             # batch_img = self.attr_mlp(batch_img.type(torch.float)).type(self.clip.dtype)
             # # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_attr
             # normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
+
             self.soft_obj.requires_grad = False
             self.soft_att.requires_grad = True
             token_tensors = self.construct_token_tensors(idx)
@@ -226,13 +232,12 @@ class ZZSP(nn.Module):
             logits = (self.clip.logit_scale.exp() * normalized_img @ idx_text_features.t())   
             loss = self.loss_fn(logits, batch_target)
         else:
-            # self.attr_mlp.requires_grad = False
-            # self.obj_mlp.requires_grad = False
+            # # self.attr_mlp.requires_grad = False
+            # # self.obj_mlp.requires_grad = False
             # batch_img, img_ft = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
             # batch_img_obj = self.obj_mlp(batch_img.type(torch.float))
             # batch_img_attr = self.attr_mlp(batch_img.type(torch.float))
-            # batch_img_com = torch.cat([batch_img_obj, batch_img_attr], dim = -1)
-            # batch_img_com = self.com_mlp(batch_img_com.type(torch.float)).type(self.clip.dtype)
+            # batch_img_com = self.com_mlp(batch_img_obj.type(torch.float), batch_img_attr.type(torch.float)).type(self.clip.dtype)
             # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_com
             # normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
 

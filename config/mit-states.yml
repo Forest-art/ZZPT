@@ -18,8 +18,9 @@ train:
   train_batch_size: 128
   gradient_accumulation_steps: 2
   seed: 0
-  epochs: 20
-  epoch_start: 10
+  epochs: 30
+  epoch_start: 0
+  epoch_round: 10
   save_path: data/model/mit-states/zzsp
   load_model: False
   best_model_metric: best_unseen     #best_unseen  best_seen AUC best_loss best_hm
