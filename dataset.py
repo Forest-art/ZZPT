@@ -2,6 +2,7 @@ from itertools import product
 
 import numpy as np
 import torch
+import random
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision.transforms import (CenterCrop, Compose, InterpolationMode,
@@ -88,6 +89,10 @@ class CompositionDataset(Dataset):
         self.split = split
         self.open_world = open_world
 
+        self.train_data_index = {}
+        self.all_data_index = {}
+
+
         self.feat_dim = None
         self.transform = transform_image(phase, imagenet=imagenet)
         self.loader = ImageLoader(self.root + '/images/')
@@ -98,6 +103,10 @@ class CompositionDataset(Dataset):
 
         if self.open_world:
             self.pairs = list(product(self.attrs, self.objs))
+        for pair in self.train_pairs:
+            self.train_data_index[pair] = []
+        for pair in self.pairs:
+            self.all_data_index[pair] = []
 
         self.train_data, self.val_data, self.test_data = self.get_split_info()
         if self.phase == 'train':
@@ -149,10 +158,12 @@ class CompositionDataset(Dataset):
             data_i = [image, attr, obj]
             if settype == 'train':
                 train_data.append(data_i)
+                self.train_data_index[(attr,obj)].append(data_i)
             elif settype == 'val':
                 val_data.append(data_i)
             else:
                 test_data.append(data_i)
+            self.all_data_index[(attr,obj)].append(data_i)
 
         return train_data, val_data, test_data
 
@@ -184,14 +195,36 @@ class CompositionDataset(Dataset):
         image, attr, obj = self.data[index]
         img = self.loader(image)
         img = self.transform(img)
+        # pos_sample, neg_sample = img, img
+
 
         if self.phase == 'train':
+            pos_sample = random.choice(self.train_data_index[(attr, obj)])
+            pos_sample = self.loader(pos_sample[0])
+            pos_sample = self.transform(pos_sample)
+            neg_attr, neg_obj = attr, obj
+            while neg_attr == attr or neg_obj == obj:
+                neg_attr, neg_obj = random.choice(self.train_pairs)
+            # print(attr, obj, neg_attr, neg_obj)
+            neg_sample = random.choice(self.train_data_index[(neg_attr, neg_obj)])
+            neg_sample = self.loader(neg_sample[0])
+            neg_sample = self.transform(neg_sample)
             data = [
-                img, self.attr2idx[attr], self.obj2idx[obj], self.train_pair_to_idx[(attr, obj)]
+                img, self.attr2idx[attr], self.obj2idx[obj], self.train_pair_to_idx[(attr, obj)], pos_sample, neg_sample
             ]
         else:
+            pos_sample = random.choice(self.all_data_index[(attr, obj)])
+            pos_sample = self.loader(pos_sample[0])
+            pos_sample = self.transform(pos_sample)
+            neg_attr, neg_obj = attr, obj
+            while neg_attr == attr or neg_obj == obj:
+                neg_attr, neg_obj = random.choice(self.train_pairs)
+            # print(attr, obj, neg_attr, neg_obj)
+            neg_sample = random.choice(self.all_data_index[(neg_attr, neg_obj)])
+            neg_sample = self.loader(neg_sample[0])
+            neg_sample = self.transform(neg_sample)
             data = [
-                img, self.attr2idx[attr], self.obj2idx[obj], self.pair2idx[(attr, obj)]
+                img, self.attr2idx[attr], self.obj2idx[obj], self.pair2idx[(attr, obj)], pos_sample, neg_sample
             ]
 
         return data

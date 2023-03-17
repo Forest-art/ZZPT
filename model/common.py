@@ -67,7 +67,8 @@ class CustomTextEncoder(torch.nn.Module):
             ]  # POS of <EOS>
             @ self.text_projection
         )
-        return tf, text_feature
+        normalized_tf = tf / tf.norm(dim=-1, keepdim=True)
+        return normalized_tf
 
 
 class MLP(nn.Module):

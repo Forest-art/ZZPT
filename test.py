@@ -370,7 +370,7 @@ class Evaluator:
 
 
 
-def predict_logits(model, dataset, config, epoch):
+def predict_logits(model, dataset, config, status):
     """Function to predict the cosine similarities between the
     images and the attribute-object representations. The function
     also returns the ground truth for attributes, objects, and pair
@@ -409,8 +409,10 @@ def predict_logits(model, dataset, config, epoch):
         for idx, data in tqdm(
             enumerate(dataloader), total=len(dataloader), desc="Testing"
         ):
+            # if idx > 1:
+            #     break
             # batch_img = data[0].cuda()
-            predict, l = model(data, pairs, epoch, "text")
+            predict, l = model(data, pairs, status)
             logits = predict
             loss += l
             attr_truth, obj_truth, pair_truth = data[1], data[2], data[3]

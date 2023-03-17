@@ -23,10 +23,11 @@ class ZZSP(nn.Module):
         self.attributes = attributes
         self.classes = classes
         self.dropout = nn.Dropout(config.dropout)
-        self.token_ids_attr, self.token_ids_obj, self.token_ids, self.soft_att, self.soft_obj, self.soft_att_obj, ctx_vectors = self.construct_soft_prompt()
+        self.token_ids_attr, self.token_ids_obj, self.token_ids, self.soft_att, self.soft_obj, self.soft_att_obj, self.soft_prompt = self.construct_soft_prompt()
         self.offset = offset
         self.enable_pos_emb = True
         self.loss_fn = CrossEntropyLoss()
+        self.triplet_loss = nn.TripletMarginLoss(margin=1.0, p=2)
         self.dtype = torch.float16
         self.text_encoder = CustomTextEncoder(self.clip, self.dtype)
         for p in self.parameters():
@@ -35,16 +36,8 @@ class ZZSP(nn.Module):
         self.soft_att = nn.Parameter(self.soft_att)
         self.soft_obj = nn.Parameter(self.soft_obj)
         self.soft_att_obj = nn.Parameter(self.soft_att_obj)
-        self.soft_prompt = nn.Parameter(ctx_vectors).cuda()
-        self.soft_prompt.requires_grad = False
 
-        self.attr_mlp = ResidualAttentionBlock(768, 768, None)
-        self.obj_mlp = ResidualAttentionBlock(768, 768, None)
-        self.com_mlp = CrossResidualAttentionBlock(768, 768, None)
-
-        # self.attr_mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
-        # self.obj_mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
-        # self.com_mlp = MLP(768 * 2, 768, 2, True, True, True, True, [1280, 512])
+        # self.mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
 
         self.weight = config.res_w
 
@@ -105,49 +98,7 @@ class ZZSP(nn.Module):
 
 
 
-    def construct_token_tensors_obj(self, pair_idx):
-        attr_idx, obj_idx = pair_idx[:, 0], pair_idx[:, 1]
-        class_token_ids_obj = self.token_ids_obj.repeat(len(self.classes), 1)
-        token_tensor = self.clip.token_embedding(
-            class_token_ids_obj.cuda()
-        ).type(self.clip.dtype)
-        soft_obj = self.dropout(self.soft_obj)
-
-        eos_idx = int(self.token_ids[0].argmax())
-        token_tensor[:, eos_idx - 1, :] = soft_obj[:].type(self.clip.dtype)
-
-        # adding the correct learnable context
-        token_tensor[
-            :, 1 : len(self.soft_prompt) + 1, :
-        ] = self.soft_prompt.type(self.clip.dtype)
-        return token_tensor
-    
-
-    def construct_token_tensors_attr(self, pair_idx):
-        # self.soft_obj.requires_grad = False
-        attr_idx, obj_idx = pair_idx[:, 0], pair_idx[:, 1]
-        class_token_ids = self.token_ids_attr.repeat(len(self.attributes), 1)
-        token_tensor = self.clip.token_embedding(
-            class_token_ids.cuda()
-        ).type(self.clip.dtype)
-        soft_att = self.dropout(self.soft_att)
-        soft_obj = self.dropout(self.soft_obj)
-
-        eos_idx = int(self.token_ids[0].argmax())
-        token_tensor[:, eos_idx - 2, :] = soft_att[:].type(self.clip.dtype)
-        # token_tensor[:, eos_idx - 1, :] = soft_obj[
-        #     obj_idx
-        # ].type(self.clip.dtype)
-
-        # adding the correct learnable context
-        token_tensor[
-            :, 1 : len(self.soft_prompt) + 1, :
-        ] = self.soft_prompt.type(self.clip.dtype)
-        return token_tensor
-
-
     def construct_token_tensors(self, pair_idx):
-        # self.soft_obj.requires_grad = True
         attr_idx, obj_idx = pair_idx[:, 0], pair_idx[:, 1]
         class_token_ids = self.token_ids.repeat(len(pair_idx), 1)
         token_tensor = self.clip.token_embedding(
@@ -189,64 +140,49 @@ class ZZSP(nn.Module):
         x = self.clip.visual.ln_post(x[:, 0, :])
         if self.clip.visual.proj is not None:
             x = x @ self.clip.visual.proj
-        return x, img_feature
+        normalized_x = x / x.norm(dim=-1, keepdim=True)
+        return normalized_x
 
 
-    def forward(self, batch, idx, epoch, stage):
-        batch_img, batch_attr, batch_obj, batch_target = batch
-        batch_img, batch_attr, batch_obj, batch_target = batch_img.cuda(), batch_attr.cuda(), batch_obj.cuda(), batch_target.cuda()
-        b = batch_img.shape[0]
+    def forward(self, batch, idx, status):
+        batch_anchor, batch_attr, batch_obj, batch_target, pos_sample, neg_sample = batch
+        batch_anchor, batch_attr, batch_obj, batch_target, pos_sample, neg_sample = batch_anchor.cuda(), batch_attr.cuda(), batch_obj.cuda(), batch_target.cuda(), pos_sample.cuda(), neg_sample.cuda()
+        b = batch_anchor.shape[0]
+        batch_img = torch.cat([batch_anchor, pos_sample, neg_sample], dim=0)
+
 
 
         #### Image Encoder
-        batch_img, img_ft = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
-        normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
+        batch_img = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
+        # batch_img_pos = self.visual(pos_sample.type(self.clip.dtype))
+        # batch_img_neg = self.visual(neg_sample.type(self.clip.dtype))
 
-        #### Text Encoder
-        if epoch // self.config.epoch_round % 3 == 0:
-            # batch_img, img_ft = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
-            # batch_img = self.obj_mlp(batch_img.type(torch.float)).type(self.clip.dtype)
-            # # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_attr
-            # normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
-            self.soft_att.requires_grad = False
+        if status == "object":
             self.soft_obj.requires_grad = True
-            token_tensors = self.construct_token_tensors(idx)
-            text_features, text_ft = self.text_encoder(self.token_ids, token_tensors, enable_pos_emb=self.enable_pos_emb)  
-            idx_text_features = text_features / text_features.norm(dim=-1, keepdim=True)
-            logits = (self.clip.logit_scale.exp() * normalized_img @ idx_text_features.t())  
-            loss = self.loss_fn(logits, batch_target)
-        elif epoch // self.config.epoch_round %3 == 1:
-            # # self.obj_mlp.requires_grad = False
-            # batch_img, img_ft = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
-            # # batch_img_obj = self.obj_mlp(batch_img.type(torch.float))
-            # # batch_img = 0.5 * batch_img + (1 - 0.5) * batch_img_obj
-            # batch_img = self.attr_mlp(batch_img.type(torch.float)).type(self.clip.dtype)
-            # # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_attr
-            # normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
-
+            self.soft_att.requires_grad = False
+        elif status == "state":
             self.soft_obj.requires_grad = False
             self.soft_att.requires_grad = True
-            token_tensors = self.construct_token_tensors(idx)
-            text_features, text_ft = self.text_encoder(self.token_ids, token_tensors, enable_pos_emb=self.enable_pos_emb)  
-            idx_text_features = text_features / text_features.norm(dim=-1, keepdim=True)
-            logits = (self.clip.logit_scale.exp() * normalized_img @ idx_text_features.t())   
-            loss = self.loss_fn(logits, batch_target)
         else:
-            # # self.attr_mlp.requires_grad = False
-            # # self.obj_mlp.requires_grad = False
-            # batch_img, img_ft = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
-            # batch_img_obj = self.obj_mlp(batch_img.type(torch.float))
-            # batch_img_attr = self.attr_mlp(batch_img.type(torch.float))
-            # batch_img_com = self.com_mlp(batch_img_obj.type(torch.float), batch_img_attr.type(torch.float)).type(self.clip.dtype)
-            # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_com
-            # normalized_img = batch_img / batch_img.norm(dim=-1, keepdim=True)
-
-            self.soft_att.requires_grad = True
             self.soft_obj.requires_grad = True
-            token_tensors = self.construct_token_tensors(idx)
-            text_features, text_ft = self.text_encoder(self.token_ids, token_tensors, enable_pos_emb=self.enable_pos_emb)  
-            idx_text_features = text_features / text_features.norm(dim=-1, keepdim=True)
-            logits = (self.clip.logit_scale.exp() * normalized_img @ idx_text_features.t())   
-            loss = self.loss_fn(logits, batch_target)
+            self.soft_att.requires_grad = True           
+        
+        # batch_img_mlp = self.mlp(batch_img.type(torch.float)).type(self.clip.dtype)
+        # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_mlp
 
-        return logits, loss
+        #### Text Encoder
+        token_tensors = self.construct_token_tensors(idx)
+        text_features = self.text_encoder(self.token_ids, token_tensors, enable_pos_emb=self.enable_pos_emb)
+
+        #### Compute Logits and loss
+        logits = (self.clip.logit_scale.exp() * batch_img @ text_features.t())   
+        # logits_pos = (self.clip.logit_scale.exp() * batch_img_pos @ text_features.t())  
+        # logits_neg = (self.clip.logit_scale.exp() * batch_img_neg @ text_features.t())  
+        
+        logits = torch.split(logits, b)
+        logits_anchor, logits_pos, logits_neg = logits[0], logits[1], logits[2]
+        loss_contrastive = self.triplet_loss(logits_anchor, logits_pos, logits_neg)
+        # print(loss_contrastive)        
+        loss = self.loss_fn(logits_anchor, batch_target) + 1 * loss_contrastive
+
+        return logits_anchor, loss

@@ -1,0 +1,518 @@
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9921| AUC  0.9762| best_hm  0.9539| attr_acc  0.9958| obj_acc  0.931| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+INFO:root:best_unseen  0.9436| best_seen  0.9911| AUC  0.9305| best_hm  0.9334| attr_acc  0.9468| obj_acc  0.8847| 
+INFO:root:best_unseen  0.9436| best_seen  0.9911| AUC  0.9305| best_hm  0.9334| attr_acc  0.9468| obj_acc  0.8847| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9968| AUC  0.9854| best_hm  0.9623| attr_acc  0.9857| obj_acc  0.8245| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.994| AUC  0.9786| best_hm  0.9521| attr_acc  0.9963| obj_acc  0.8966| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9654| best_seen  0.996| AUC  0.9465| best_hm  0.9477| attr_acc  0.9424| obj_acc  0.9096| 
+INFO:root:best_unseen  0.9447| best_seen  0.9919| AUC  0.9335| best_hm  0.9381| attr_acc  0.9609| obj_acc  0.8654| 
+INFO:root:best_unseen  0.9654| best_seen  0.996| AUC  0.9465| best_hm  0.9477| attr_acc  0.9424| obj_acc  0.9096| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9947| AUC  0.981| best_hm  0.9543| attr_acc  0.9941| obj_acc  0.89| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9521| best_seen  0.9939| AUC  0.941| best_hm  0.9412| attr_acc  0.9622| obj_acc  0.8771| 
+INFO:root:best_unseen  0.9996| best_seen  0.9966| AUC  0.9886| best_hm  0.9606| attr_acc  0.9864| obj_acc  0.9077| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9566| best_seen  0.9966| AUC  0.9426| best_hm  0.9437| attr_acc  0.9458| obj_acc  0.9116| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9566| best_seen  0.9966| AUC  0.9426| best_hm  0.9437| attr_acc  0.9458| obj_acc  0.9116| 
+INFO:root:best_unseen  1.0| best_seen  0.9955| AUC  0.9777| best_hm  0.9483| attr_acc  0.9913| obj_acc  0.87| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.958| best_seen  0.9935| AUC  0.9476| best_hm  0.9462| attr_acc  0.9653| obj_acc  0.8753| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9996| best_seen  0.9936| AUC  0.9849| best_hm  0.958| attr_acc  0.9972| obj_acc  0.943| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9955| AUC  0.982| best_hm  0.9557| attr_acc  0.9956| obj_acc  0.9236| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9504| best_seen  0.9939| AUC  0.9398| best_hm  0.9426| attr_acc  0.9776| obj_acc  0.8862| 
+INFO:root:best_unseen  0.9455| best_seen  0.9921| AUC  0.9256| best_hm  0.9365| attr_acc  0.9574| obj_acc  0.8978| 
+INFO:root:best_unseen  0.9455| best_seen  0.9921| AUC  0.9256| best_hm  0.9365| attr_acc  0.9574| obj_acc  0.8978| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9959| AUC  0.9772| best_hm  0.9442| attr_acc  0.9939| obj_acc  0.8148| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.967| best_seen  0.9943| AUC  0.9579| best_hm  0.9527| attr_acc  0.9795| obj_acc  0.9048| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9983| AUC  0.992| best_hm  0.9691| attr_acc  0.9809| obj_acc  0.8333| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9728| best_seen  0.9976| AUC  0.9553| best_hm  0.9518| attr_acc  0.9411| obj_acc  0.9276| 
+INFO:root:best_unseen  1.0| best_seen  0.9957| AUC  0.9834| best_hm  0.9559| attr_acc  0.993| obj_acc  0.8826| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9567| best_seen  0.9941| AUC  0.9474| best_hm  0.9464| attr_acc  0.9749| obj_acc  0.893| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9983| AUC  0.9913| best_hm  0.9657| attr_acc  0.9785| obj_acc  0.7479| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9959| AUC  0.983| best_hm  0.9573| attr_acc  0.9944| obj_acc  0.9242| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9728| best_seen  0.9978| AUC  0.9542| best_hm  0.9409| attr_acc  0.9445| obj_acc  0.9339| 
+INFO:root:best_unseen  0.9537| best_seen  0.9943| AUC  0.9403| best_hm  0.9418| attr_acc  0.9828| obj_acc  0.8906| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9966| AUC  0.9759| best_hm  0.9458| attr_acc  0.995| obj_acc  0.8316| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9983| AUC  0.9902| best_hm  0.9658| attr_acc  0.978| obj_acc  0.7302| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9659| best_seen  0.9945| AUC  0.9566| best_hm  0.9527| attr_acc  0.9796| obj_acc  0.8818| 
+INFO:root:best_unseen  0.9735| best_seen  0.998| AUC  0.962| best_hm  0.9454| attr_acc  0.9475| obj_acc  0.9104| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9964| AUC  0.971| best_hm  0.9376| attr_acc  0.994| obj_acc  0.8112| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9568| best_seen  0.9941| AUC  0.9469| best_hm  0.9458| attr_acc  0.9702| obj_acc  0.8744| 
+INFO:root:best_unseen  0.9999| best_seen  0.9989| AUC  0.9949| best_hm  0.9675| attr_acc  0.9862| obj_acc  0.8906| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+INFO:root:best_unseen  0.9666| best_seen  0.9984| AUC  0.9605| best_hm  0.9548| attr_acc  0.9616| obj_acc  0.9266| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.8443| best_seen  0.9901| AUC  0.8037| best_hm  0.8165| attr_acc  0.9333| obj_acc  0.7976| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9528| best_seen  0.9871| AUC  0.929| best_hm  0.9281| attr_acc  0.9709| obj_acc  0.8523| 
+INFO:root:best_unseen  1.0| best_seen  0.9987| AUC  0.9942| best_hm  0.967| attr_acc  0.9861| obj_acc  0.8976| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9528| best_seen  0.9871| AUC  0.929| best_hm  0.9281| attr_acc  0.9709| obj_acc  0.8523| 
+INFO:root:best_unseen  0.9692| best_seen  0.9986| AUC  0.9606| best_hm  0.9547| attr_acc  0.9572| obj_acc  0.92| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9561| best_seen  0.9932| AUC  0.8924| best_hm  0.8511| attr_acc  0.9673| obj_acc  0.8029| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9655| best_seen  0.9917| AUC  0.9497| best_hm  0.9447| attr_acc  0.9886| obj_acc  0.8688| 
+INFO:root:best_unseen  1.0| best_seen  0.9981| AUC  0.9904| best_hm  0.9697| attr_acc  0.9911| obj_acc  0.8589| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9655| best_seen  0.9917| AUC  0.9497| best_hm  0.9447| attr_acc  0.9886| obj_acc  0.8688| 
+INFO:root:best_unseen  0.9719| best_seen  0.9982| AUC  0.9642| best_hm  0.9558| attr_acc  0.9487| obj_acc  0.9237| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9439| best_seen  0.9944| AUC  0.8688| best_hm  0.8363| attr_acc  0.9547| obj_acc  0.7292| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9707| best_seen  0.9933| AUC  0.9575| best_hm  0.9513| attr_acc  0.9564| obj_acc  0.8847| 
+INFO:root:best_unseen  0.9998| best_seen  0.9989| AUC  0.9925| best_hm  0.9639| attr_acc  0.9805| obj_acc  0.9382| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9608| best_seen  0.9988| AUC  0.9437| best_hm  0.9419| attr_acc  0.9419| obj_acc  0.921| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9451| best_seen  0.9947| AUC  0.8597| best_hm  0.8216| attr_acc  0.9443| obj_acc  0.7087| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9282| best_seen  0.9933| AUC  0.9168| best_hm  0.9289| attr_acc  0.9584| obj_acc  0.8334| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9955| AUC  0.9859| best_hm  0.955| attr_acc  0.9779| obj_acc  0.9554| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9423| best_seen  0.9952| AUC  0.9128| best_hm  0.9344| attr_acc  0.9473| obj_acc  0.8956| 
+INFO:root:best_unseen  0.9767| best_seen  0.9949| AUC  0.8964| best_hm  0.833| attr_acc  0.9691| obj_acc  0.6926| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9423| best_seen  0.9952| AUC  0.9128| best_hm  0.9344| attr_acc  0.9473| obj_acc  0.8956| 
+INFO:root:best_unseen  0.966| best_seen  0.9939| AUC  0.955| best_hm  0.9484| attr_acc  0.9575| obj_acc  0.859| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9804| best_seen  0.9944| AUC  0.9091| best_hm  0.8434| attr_acc  0.983| obj_acc  0.7701| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9989| AUC  0.9928| best_hm  0.9663| attr_acc  0.9752| obj_acc  0.9441| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9617| best_seen  0.9943| AUC  0.9493| best_hm  0.9439| attr_acc  0.958| obj_acc  0.8723| 
+INFO:root:best_unseen  0.9614| best_seen  0.9986| AUC  0.9539| best_hm  0.9509| attr_acc  0.9633| obj_acc  0.9245| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.986| best_seen  0.9942| AUC  0.9165| best_hm  0.8517| attr_acc  0.9867| obj_acc  0.7765| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9564| best_seen  0.9945| AUC  0.9438| best_hm  0.9414| attr_acc  0.9639| obj_acc  0.875| 
+INFO:root:best_unseen  1.0| best_seen  0.9991| AUC  0.9948| best_hm  0.9694| attr_acc  0.9828| obj_acc  0.8982| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9663| best_seen  0.9982| AUC  0.9571| best_hm  0.9514| attr_acc  0.9522| obj_acc  0.9129| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9825| best_seen  0.9955| AUC  0.9242| best_hm  0.8623| attr_acc  0.985| obj_acc  0.7682| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9649| best_seen  0.9945| AUC  0.9524| best_hm  0.9469| attr_acc  0.9502| obj_acc  0.8649| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9985| AUC  0.9951| best_hm  0.9694| attr_acc  0.9937| obj_acc  0.9154| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9698| best_seen  0.9988| AUC  0.958| best_hm  0.952| attr_acc  0.9455| obj_acc  0.9383| 
+INFO:root:best_unseen  0.9872| best_seen  0.9947| AUC  0.9275| best_hm  0.8635| attr_acc  0.9847| obj_acc  0.7711| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.96| best_seen  0.9941| AUC  0.9465| best_hm  0.9412| attr_acc  0.9493| obj_acc  0.87| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9992| AUC  0.9958| best_hm  0.9702| attr_acc  0.9989| obj_acc  0.9196| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9942| best_seen  0.9959| AUC  0.9381| best_hm  0.8743| attr_acc  0.9889| obj_acc  0.7225| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.974| best_seen  0.999| AUC  0.9666| best_hm  0.9558| attr_acc  0.9475| obj_acc  0.931| 
+INFO:root:best_unseen  0.9641| best_seen  0.9941| AUC  0.9509| best_hm  0.9435| attr_acc  0.9643| obj_acc  0.8754| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9914| best_seen  0.9947| AUC  0.932| best_hm  0.8688| attr_acc  0.9909| obj_acc  0.7337| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9985| AUC  0.9932| best_hm  0.9697| attr_acc  0.9977| obj_acc  0.887| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9588| best_seen  0.9945| AUC  0.9384| best_hm  0.9431| attr_acc  0.9689| obj_acc  0.8467| 
+INFO:root:best_unseen  0.9709| best_seen  0.9986| AUC  0.9581| best_hm  0.9357| attr_acc  0.9438| obj_acc  0.9241| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9928| best_seen  0.9944| AUC  0.9288| best_hm  0.8719| attr_acc  0.9923| obj_acc  0.7298| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9536| best_seen  0.9945| AUC  0.9387| best_hm  0.9402| attr_acc  0.9814| obj_acc  0.8664| 
+INFO:root:best_unseen  0.9999| best_seen  0.9981| AUC  0.9948| best_hm  0.9689| attr_acc  0.996| obj_acc  0.9572| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9575| best_seen  0.9984| AUC  0.9524| best_hm  0.9487| attr_acc  0.9578| obj_acc  0.9288| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9575| best_seen  0.9984| AUC  0.9524| best_hm  0.9487| attr_acc  0.9578| obj_acc  0.9288| 
+INFO:root:best_unseen  0.996| best_seen  0.9957| AUC  0.9364| best_hm  0.8768| attr_acc  0.994| obj_acc  0.7047| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9571| best_seen  0.9947| AUC  0.9459| best_hm  0.9431| attr_acc  0.969| obj_acc  0.8872| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9981| AUC  0.9946| best_hm  0.9677| attr_acc  0.9946| obj_acc  0.9595| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9853| best_seen  0.9957| AUC  0.9252| best_hm  0.8772| attr_acc  0.9809| obj_acc  0.6909| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9537| best_seen  0.9982| AUC  0.9432| best_hm  0.9428| attr_acc  0.9469| obj_acc  0.9152| 
+INFO:root:best_unseen  0.9584| best_seen  0.9945| AUC  0.9463| best_hm  0.9439| attr_acc  0.9517| obj_acc  0.8617| 
+INFO:root:best_unseen  0.9537| best_seen  0.9982| AUC  0.9432| best_hm  0.9428| attr_acc  0.9469| obj_acc  0.9152| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9954| best_seen  0.9959| AUC  0.95| best_hm  0.8951| attr_acc  0.9897| obj_acc  0.7372| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9659| best_seen  0.9943| AUC  0.9517| best_hm  0.9439| attr_acc  0.9533| obj_acc  0.8771| 
+INFO:root:best_unseen  1.0| best_seen  0.9989| AUC  0.9959| best_hm  0.9714| attr_acc  0.9949| obj_acc  0.8716| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9811| best_seen  0.9974| AUC  0.9621| best_hm  0.9382| attr_acc  0.9432| obj_acc  0.9246| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9925| best_seen  0.9955| AUC  0.9327| best_hm  0.8752| attr_acc  0.99| obj_acc  0.7524| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9611| best_seen  0.9941| AUC  0.9461| best_hm  0.9398| attr_acc  0.96| obj_acc  0.8796| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9989| AUC  0.9959| best_hm  0.9692| attr_acc  0.988| obj_acc  0.8979| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9786| best_seen  0.998| AUC  0.9554| best_hm  0.9347| attr_acc  0.9439| obj_acc  0.9401| 
+INFO:root:best_unseen  0.9904| best_seen  0.9953| AUC  0.9363| best_hm  0.8813| attr_acc  0.9909| obj_acc  0.7535| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9511| best_seen  0.9943| AUC  0.9383| best_hm  0.9381| attr_acc  0.9714| obj_acc  0.8505| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9996| AUC  0.9973| best_hm  0.9714| attr_acc  0.9972| obj_acc  0.9484| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9887| best_seen  0.9961| AUC  0.9256| best_hm  0.8635| attr_acc  0.9882| obj_acc  0.7537| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9707| best_seen  0.9992| AUC  0.955| best_hm  0.95| attr_acc  0.9456| obj_acc  0.9368| 
+INFO:root:best_unseen  0.9544| best_seen  0.9939| AUC  0.9414| best_hm  0.9399| attr_acc  0.9788| obj_acc  0.8296| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9994| AUC  0.9961| best_hm  0.9662| attr_acc  0.9971| obj_acc  0.9489| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9915| best_seen  0.9966| AUC  0.9218| best_hm  0.8583| attr_acc  0.9878| obj_acc  0.7278| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9646| best_seen  0.9988| AUC  0.9485| best_hm  0.9439| attr_acc  0.9453| obj_acc  0.9269| 
+INFO:root:best_unseen  0.9615| best_seen  0.9947| AUC  0.9461| best_hm  0.9434| attr_acc  0.964| obj_acc  0.8399| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  1.0| best_seen  0.9893| AUC  0.9863| best_hm  0.9646| attr_acc  0.9939| obj_acc  0.9516| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9972| best_seen  0.9962| AUC  0.9173| best_hm  0.8562| attr_acc  0.9844| obj_acc  0.6606| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9641| best_seen  0.9911| AUC  0.954| best_hm  0.9574| attr_acc  0.9977| obj_acc  0.9354| 
+INFO:root:best_unseen  0.9573| best_seen  0.995| AUC  0.944| best_hm  0.9413| attr_acc  0.9705| obj_acc  0.8392| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9998| best_seen  0.9985| AUC  0.9939| best_hm  0.9683| attr_acc  0.9912| obj_acc  0.8897| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9968| best_seen  0.9942| AUC  0.9161| best_hm  0.8532| attr_acc  0.9843| obj_acc  0.6942| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9745| best_seen  0.998| AUC  0.9646| best_hm  0.9574| attr_acc  0.9621| obj_acc  0.9333| 
+INFO:root:best_unseen  0.9514| best_seen  0.9937| AUC  0.9354| best_hm  0.9372| attr_acc  0.9582| obj_acc  0.8529| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9992| AUC  0.9921| best_hm  0.9691| attr_acc  0.9816| obj_acc  0.9325| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9988| best_seen  0.9962| AUC  0.9265| best_hm  0.8624| attr_acc  0.9883| obj_acc  0.7113| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9491| best_seen  0.995| AUC  0.939| best_hm  0.9401| attr_acc  0.9649| obj_acc  0.8261| 
+INFO:root:best_unseen  0.9645| best_seen  0.9986| AUC  0.9565| best_hm  0.9535| attr_acc  0.9592| obj_acc  0.9294| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9986| best_seen  0.9955| AUC  0.9242| best_hm  0.8587| attr_acc  0.9868| obj_acc  0.6898| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9989| AUC  0.9941| best_hm  0.9711| attr_acc  0.9836| obj_acc  0.9172| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9501| best_seen  0.9947| AUC  0.9389| best_hm  0.9387| attr_acc  0.9677| obj_acc  0.8349| 
+INFO:root:best_unseen  0.9654| best_seen  0.9988| AUC  0.9594| best_hm  0.9545| attr_acc  0.9622| obj_acc  0.9313| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9978| best_seen  0.9957| AUC  0.93| best_hm  0.866| attr_acc  0.9861| obj_acc  0.7335| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9987| AUC  0.9946| best_hm  0.9707| attr_acc  0.9899| obj_acc  0.8872| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.943| best_seen  0.9943| AUC  0.931| best_hm  0.934| attr_acc  0.9803| obj_acc  0.867| 
+INFO:root:best_unseen  0.9747| best_seen  0.9986| AUC  0.9677| best_hm  0.9576| attr_acc  0.9542| obj_acc  0.929| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9966| best_seen  0.9957| AUC  0.9268| best_hm  0.8619| attr_acc  0.9853| obj_acc  0.7504| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9997| best_seen  0.9989| AUC  0.9953| best_hm  0.9684| attr_acc  0.9914| obj_acc  0.9504| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9518| best_seen  0.9945| AUC  0.9397| best_hm  0.9386| attr_acc  0.9751| obj_acc  0.8679| 
+INFO:root:best_unseen  0.9596| best_seen  0.999| AUC  0.9494| best_hm  0.9478| attr_acc  0.9477| obj_acc  0.9341| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9992| best_seen  0.9949| AUC  0.9419| best_hm  0.8861| attr_acc  0.9881| obj_acc  0.7234| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9996| AUC  0.9958| best_hm  0.9677| attr_acc  0.9937| obj_acc  0.9392| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9568| best_seen  0.9941| AUC  0.9414| best_hm  0.9387| attr_acc  0.9678| obj_acc  0.8733| 
+INFO:root:best_unseen  0.9638| best_seen  0.999| AUC  0.9536| best_hm  0.9486| attr_acc  0.9446| obj_acc  0.9315| 
+INFO:root:Evaluating val dataset:
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9997| best_seen  0.9964| AUC  0.9503| best_hm  0.8876| attr_acc  0.9881| obj_acc  0.7569| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9999| best_seen  0.9996| AUC  0.9949| best_hm  0.9684| attr_acc  0.9886| obj_acc  0.9463| 
+INFO:root:Now status is state+object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9622| best_seen  0.9988| AUC  0.9478| best_hm  0.9418| attr_acc  0.9404| obj_acc  0.9302| 
+INFO:root:best_unseen  0.9537| best_seen  0.9982| AUC  0.9432| best_hm  0.9428| attr_acc  0.9469| obj_acc  0.9152| 
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+WARNING:root:This is the training process of zzsp
+INFO:root:Namespace(lr=0.0005, dataset='aoclevr', weight_decay=1e-05, clip_model='ViT-L/14', epochs=30, epoch_start=0, train_batch_size=128, eval_batch_size=32, fusion='zzsp', context_length=8, attr_dropout=0.3, save_path='data/model/aoclevr/zzsp', save_every_n=5, save_model=True, load_model='./data/model/uaoclevr/zzsp/zzsp_best.pt', seed=0, gradient_accumulation_steps=2, open_world=True, bias=0.001, topk=1, text_encoder_batch_size=36, threshold=0.4, threshold_trials=50, K=1, prompt_template='a photo of x x', res_w=0.5, SA_K=1, width_img=1024, width_txt=768, dataset_path='../../../dataset/aoclevr', dropout=0.3, epoch_round=10, best_model_metric='best_loss', att_obj_w=0.01, sp_w=0.1, log_id='This is the training process of zzsp')
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.8443| best_seen  0.9901| AUC  0.8037| best_hm  0.8165| attr_acc  0.9333| obj_acc  0.7976| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9528| best_seen  0.9871| AUC  0.929| best_hm  0.9281| attr_acc  0.9709| obj_acc  0.8523| 
+INFO:root:best_unseen  0.9528| best_seen  0.9871| AUC  0.929| best_hm  0.9281| attr_acc  0.9709| obj_acc  0.8523| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.8571| best_seen  0.9919| AUC  0.801| best_hm  0.8016| attr_acc  0.9277| obj_acc  0.775| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9613| best_seen  0.9897| AUC  0.9379| best_hm  0.931| attr_acc  0.9661| obj_acc  0.8441| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.8707| best_seen  0.9914| AUC  0.8117| best_hm  0.8133| attr_acc  0.9403| obj_acc  0.7458| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9689| best_seen  0.9903| AUC  0.9477| best_hm  0.9363| attr_acc  0.9764| obj_acc  0.8296| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9819| best_seen  0.9921| AUC  0.9136| best_hm  0.8653| attr_acc  0.9866| obj_acc  0.7064| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9715| best_seen  0.9915| AUC  0.9511| best_hm  0.9321| attr_acc  0.9414| obj_acc  0.7928| 
+INFO:root:best_unseen  0.9715| best_seen  0.9915| AUC  0.9511| best_hm  0.9321| attr_acc  0.9414| obj_acc  0.7928| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9879| best_seen  0.9923| AUC  0.9214| best_hm  0.8662| attr_acc  0.9795| obj_acc  0.6867| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9646| best_seen  0.9921| AUC  0.9469| best_hm  0.9343| attr_acc  0.9447| obj_acc  0.7611| 
+INFO:root:best_unseen  0.9646| best_seen  0.9921| AUC  0.9469| best_hm  0.9343| attr_acc  0.9447| obj_acc  0.7611| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9844| best_seen  0.9957| AUC  0.8955| best_hm  0.8409| attr_acc  0.9715| obj_acc  0.5911| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9618| best_seen  0.9919| AUC  0.9448| best_hm  0.9382| attr_acc  0.9445| obj_acc  0.7444| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9816| best_seen  0.9938| AUC  0.9258| best_hm  0.8816| attr_acc  0.9761| obj_acc  0.6854| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.973| best_seen  0.9917| AUC  0.9571| best_hm  0.9471| attr_acc  0.9472| obj_acc  0.7874| 
+INFO:root:best_unseen  0.973| best_seen  0.9917| AUC  0.9571| best_hm  0.9471| attr_acc  0.9472| obj_acc  0.7874| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.989| best_seen  0.9936| AUC  0.9431| best_hm  0.8988| attr_acc  0.9867| obj_acc  0.7585| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9701| best_seen  0.9939| AUC  0.9502| best_hm  0.9439| attr_acc  0.954| obj_acc  0.8228| 
+INFO:root:best_unseen  0.9701| best_seen  0.9939| AUC  0.9502| best_hm  0.9439| attr_acc  0.954| obj_acc  0.8228| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9973| best_seen  0.9947| AUC  0.9339| best_hm  0.8771| attr_acc  0.986| obj_acc  0.5484| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9708| best_seen  0.9929| AUC  0.9559| best_hm  0.9477| attr_acc  0.9474| obj_acc  0.7763| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9985| best_seen  0.9949| AUC  0.9332| best_hm  0.8728| attr_acc  0.9786| obj_acc  0.6822| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9701| best_seen  0.9935| AUC  0.9536| best_hm  0.9469| attr_acc  0.9415| obj_acc  0.7868| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9972| best_seen  0.9953| AUC  0.9246| best_hm  0.8605| attr_acc  0.9793| obj_acc  0.6492| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.971| best_seen  0.9945| AUC  0.9597| best_hm  0.95| attr_acc  0.9469| obj_acc  0.7742| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.98| best_seen  0.9961| AUC  0.8937| best_hm  0.834| attr_acc  0.9808| obj_acc  0.5538| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9667| best_seen  0.9941| AUC  0.9522| best_hm  0.9458| attr_acc  0.9541| obj_acc  0.7484| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9858| best_seen  0.9949| AUC  0.9117| best_hm  0.8599| attr_acc  0.9831| obj_acc  0.6267| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9643| best_seen  0.9945| AUC  0.9461| best_hm  0.9429| attr_acc  0.954| obj_acc  0.7639| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9923| best_seen  0.9962| AUC  0.9093| best_hm  0.8483| attr_acc  0.9832| obj_acc  0.5773| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.969| best_seen  0.9943| AUC  0.9475| best_hm  0.9485| attr_acc  0.9506| obj_acc  0.7953| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9756| best_seen  0.9951| AUC  0.9049| best_hm  0.8559| attr_acc  0.9826| obj_acc  0.6404| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9567| best_seen  0.9947| AUC  0.9258| best_hm  0.9408| attr_acc  0.9528| obj_acc  0.8315| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9955| best_seen  0.9955| AUC  0.9096| best_hm  0.8467| attr_acc  0.9817| obj_acc  0.5665| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9491| best_seen  0.9943| AUC  0.9361| best_hm  0.9328| attr_acc  0.9421| obj_acc  0.7969| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9948| best_seen  0.9961| AUC  0.9212| best_hm  0.8557| attr_acc  0.9792| obj_acc  0.5761| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9585| best_seen  0.9937| AUC  0.9445| best_hm  0.9378| attr_acc  0.9406| obj_acc  0.8112| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9936| best_seen  0.9955| AUC  0.9366| best_hm  0.8753| attr_acc  0.9832| obj_acc  0.6749| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9533| best_seen  0.9945| AUC  0.9417| best_hm  0.9396| attr_acc  0.951| obj_acc  0.8608| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.999| best_seen  0.9961| AUC  0.9396| best_hm  0.877| attr_acc  0.9807| obj_acc  0.6282| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9745| best_seen  0.9952| AUC  0.9618| best_hm  0.9486| attr_acc  0.9429| obj_acc  0.8854| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9977| best_seen  0.9955| AUC  0.9392| best_hm  0.8795| attr_acc  0.9775| obj_acc  0.6882| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9606| best_seen  0.9941| AUC  0.9458| best_hm  0.9392| attr_acc  0.9419| obj_acc  0.8772| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9978| best_seen  0.9957| AUC  0.9383| best_hm  0.8789| attr_acc  0.9767| obj_acc  0.6929| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9637| best_seen  0.9947| AUC  0.9484| best_hm  0.9382| attr_acc  0.9421| obj_acc  0.8769| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9952| best_seen  0.9961| AUC  0.9387| best_hm  0.88| attr_acc  0.9773| obj_acc  0.7136| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9571| best_seen  0.9947| AUC  0.9427| best_hm  0.9341| attr_acc  0.9452| obj_acc  0.864| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9952| best_seen  0.9961| AUC  0.947| best_hm  0.8888| attr_acc  0.9838| obj_acc  0.718| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9648| best_seen  0.9943| AUC  0.949| best_hm  0.9425| attr_acc  0.9589| obj_acc  0.8693| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9958| best_seen  0.9961| AUC  0.9491| best_hm  0.8898| attr_acc  0.9841| obj_acc  0.7133| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9599| best_seen  0.9947| AUC  0.9486| best_hm  0.9461| attr_acc  0.9674| obj_acc  0.8799| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9985| best_seen  0.9962| AUC  0.9605| best_hm  0.9059| attr_acc  0.9852| obj_acc  0.7543| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9572| best_seen  0.9945| AUC  0.935| best_hm  0.9434| attr_acc  0.971| obj_acc  0.874| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9989| best_seen  0.9961| AUC  0.9619| best_hm  0.911| attr_acc  0.9821| obj_acc  0.7689| 
+INFO:root:Now status is object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9503| best_seen  0.9947| AUC  0.9359| best_hm  0.9384| attr_acc  0.9644| obj_acc  0.881| 
+INFO:root:best_unseen  0.9503| best_seen  0.9947| AUC  0.9359| best_hm  0.9384| attr_acc  0.9644| obj_acc  0.881| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9992| best_seen  0.9964| AUC  0.9648| best_hm  0.9116| attr_acc  0.9849| obj_acc  0.797| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9521| best_seen  0.9945| AUC  0.938| best_hm  0.9387| attr_acc  0.9685| obj_acc  0.8819| 
+INFO:root:best_unseen  0.9521| best_seen  0.9945| AUC  0.938| best_hm  0.9387| attr_acc  0.9685| obj_acc  0.8819| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.998| best_seen  0.9959| AUC  0.9608| best_hm  0.9082| attr_acc  0.9879| obj_acc  0.7887| 
+INFO:root:Now status is state
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9472| best_seen  0.9945| AUC  0.9315| best_hm  0.9344| attr_acc  0.9703| obj_acc  0.8627| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9977| best_seen  0.9962| AUC  0.9593| best_hm  0.9112| attr_acc  0.9907| obj_acc  0.778| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9425| best_seen  0.995| AUC  0.927| best_hm  0.9303| attr_acc  0.9886| obj_acc  0.8654| 
+INFO:root:Evaluating val dataset:
+INFO:root:best_unseen  0.9978| best_seen  0.9959| AUC  0.9568| best_hm  0.9056| attr_acc  0.989| obj_acc  0.7517| 
+INFO:root:Now status is state + object
+INFO:root:Evaluating test dataset:
+INFO:root:best_unseen  0.9635| best_seen  0.9943| AUC  0.951| best_hm  0.9474| attr_acc  0.9835| obj_acc  0.8969| 
+INFO:root:best_unseen  0.9521| best_seen  0.9945| AUC  0.938| best_hm  0.9387| attr_acc  0.9685| obj_acc  0.8819| 
