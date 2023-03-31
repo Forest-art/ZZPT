@@ -1,13 +1,9 @@
 model:
-  fusion: zzsp
-  K: 1
   prompt_template: "a photo of x x"
   clip_model: "ViT-L/14"
   res_w: 0.5
-  SA_K: 1
   width_img: 1024
   width_txt: 768
-
 
 train:
   dataset: ut-zappos
@@ -21,7 +17,9 @@ train:
   seed: 0
   epochs: 30
   epoch_start: 0
-  epoch_round: 10
+  epoch_round: 3
+  ent_weight: True
+  update: True
   save_path: data/model/ut-zappos/zzsp
   best_model_metric: best_loss     #best_unseen  best_seen AUC best_loss best_hm
   save_model: True
@@ -32,7 +30,7 @@ train:
 
 test:
   eval_batch_size: 32
-  open_world: True
+  open_world: False
   load_model: "./data/model/ut-zappos/zzsp/zzsp_best.pt"
   topk: 1
   text_encoder_batch_size: 36

@@ -13,7 +13,7 @@ from einops import rearrange, reduce, repeat
 from einops.layers.torch import Rearrange, Reduce
 
 class CustomTextEncoder(torch.nn.Module):
-    def __init__(self, clip_model, dtype=torch.float16):
+    def __init__(self, clip_model, dtype, attributes, classes):
         super().__init__()
         self.dtype = dtype
 
@@ -22,6 +22,8 @@ class CustomTextEncoder(torch.nn.Module):
         self.ln_final = clip_model.ln_final
         self.text_projection = clip_model.text_projection
         self.token_embedding = clip_model.token_embedding
+        self.attributes = len(attributes)
+        self.classes = len(classes)
 
     def tokenize(self, text):
         return torch.cat([clip.tokenize(tok) for tok in text])
@@ -31,7 +33,7 @@ class CustomTextEncoder(torch.nn.Module):
         text_features = self.forward(token_ids, None, enable_pos_emb)
         return text_features
 
-    def forward(self, token_ids, token_tensors, enable_pos_emb):
+    def forward(self, token_ids, token_tensors, enable_pos_emb, idx):
         """The forward function to compute representations for the prompts.
 
         Args:
@@ -68,6 +70,7 @@ class CustomTextEncoder(torch.nn.Module):
             @ self.text_projection
         )
         normalized_tf = tf / tf.norm(dim=-1, keepdim=True)
+
         return normalized_tf
 
 

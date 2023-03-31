@@ -100,6 +100,7 @@ class CompositionDataset(Dataset):
         self.attrs, self.objs, self.pairs, \
                 self.train_pairs, self.val_pairs, \
                 self.test_pairs = self.parse_split()
+        self.ent_attr, self.ent_obj = self.get_entanglement()
 
         if self.open_world:
             self.pairs = list(product(self.attrs, self.objs))
@@ -141,6 +142,21 @@ class CompositionDataset(Dataset):
             self.attrs_by_obj_train = {k: [] for k in self.objs}
             for (a, o) in self.train_pairs:
                 self.attrs_by_obj_train[o].append(a)
+
+        # print(len(self.attrs), len(self.objs))
+
+
+    def get_entanglement(self):
+        ent_attr, ent_obj = {}, {}
+        for attr in self.attrs:
+            ent_attr[attr] = 0
+        for obj in self.objs:
+            ent_obj[obj] = 0
+        for (attr, obj) in self.train_pairs:
+            ent_attr[attr] += 1
+            ent_obj[obj] += 1
+        return ent_attr, ent_obj
+
 
     def get_split_info(self):
         data = torch.load(self.root + '/metadata_{}.t7'.format(self.split))
@@ -195,36 +211,14 @@ class CompositionDataset(Dataset):
         image, attr, obj = self.data[index]
         img = self.loader(image)
         img = self.transform(img)
-        # pos_sample, neg_sample = img, img
-
 
         if self.phase == 'train':
-            pos_sample = random.choice(self.train_data_index[(attr, obj)])
-            pos_sample = self.loader(pos_sample[0])
-            pos_sample = self.transform(pos_sample)
-            neg_attr, neg_obj = attr, obj
-            while neg_attr == attr or neg_obj == obj:
-                neg_attr, neg_obj = random.choice(self.train_pairs)
-            # print(attr, obj, neg_attr, neg_obj)
-            neg_sample = random.choice(self.train_data_index[(neg_attr, neg_obj)])
-            neg_sample = self.loader(neg_sample[0])
-            neg_sample = self.transform(neg_sample)
             data = [
-                img, self.attr2idx[attr], self.obj2idx[obj], self.train_pair_to_idx[(attr, obj)], pos_sample, neg_sample
+                img, self.attr2idx[attr], self.obj2idx[obj], self.train_pair_to_idx[(attr, obj)]
             ]
         else:
-            pos_sample = random.choice(self.all_data_index[(attr, obj)])
-            pos_sample = self.loader(pos_sample[0])
-            pos_sample = self.transform(pos_sample)
-            neg_attr, neg_obj = attr, obj
-            while neg_attr == attr or neg_obj == obj:
-                neg_attr, neg_obj = random.choice(self.train_pairs)
-            # print(attr, obj, neg_attr, neg_obj)
-            neg_sample = random.choice(self.all_data_index[(neg_attr, neg_obj)])
-            neg_sample = self.loader(neg_sample[0])
-            neg_sample = self.transform(neg_sample)
             data = [
-                img, self.attr2idx[attr], self.obj2idx[obj], self.pair2idx[(attr, obj)], pos_sample, neg_sample
+                img, self.attr2idx[attr], self.obj2idx[obj], self.pair2idx[(attr, obj)]
             ]
 
         return data

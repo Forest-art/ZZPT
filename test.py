@@ -370,7 +370,7 @@ class Evaluator:
 
 
 
-def predict_logits(model, dataset, config, status):
+def predict_logits(model, dataset, config):
     """Function to predict the cosine similarities between the
     images and the attribute-object representations. The function
     also returns the ground truth for attributes, objects, and pair
@@ -412,7 +412,7 @@ def predict_logits(model, dataset, config, status):
             # if idx > 1:
             #     break
             # batch_img = data[0].cuda()
-            predict, l = model(data, pairs, status)
+            predict, l = model(data, pairs)
             logits = predict
             loss += l
             attr_truth, obj_truth, pair_truth = data[1], data[2], data[3]
@@ -552,8 +552,9 @@ if __name__ == "__main__":
     classes = [cla.replace(".", " ").lower() for cla in allobj]
     attributes = [attr.replace(".", " ").lower() for attr in allattrs]
     offset = len(attributes)
+    ent_attr, ent_obj = test_dataset.ent_attr, test_dataset.ent_obj
 
-    model = ZZSP(config, attributes=attributes, classes=classes, offset=offset).cuda()
+    model = ZZSP(config, attributes=attributes, classes=classes, offset=offset, ent_attr=ent_attr, ent_obj=ent_obj).cuda()
     model.load_state_dict(torch.load(config.load_model))
 
     print('evaluating on the validation set')
@@ -606,7 +607,7 @@ if __name__ == "__main__":
             map_location='cpu')['feasibility']
         with torch.no_grad():
             all_logits, all_attr_gt, all_obj_gt, all_pair_gt, loss_avg = predict_logits(
-                model, val_dataset, config, 20)
+                model, val_dataset, config)
             if config.open_world:
                 print('using threshold: ', best_th)
                 all_logits = threshold_with_feasibility(
@@ -630,7 +631,7 @@ if __name__ == "__main__":
     with torch.no_grad():
         evaluator = Evaluator(test_dataset, model=None)
         all_logits, all_attr_gt, all_obj_gt, all_pair_gt, loss_avg = predict_logits(
-            model, test_dataset, config, 20)
+            model, test_dataset, config)
         if config.open_world and best_th is not None:
             print('using threshold: ', best_th)
             all_logits = threshold_with_feasibility(

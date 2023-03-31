@@ -11,60 +11,50 @@ from clip_modules.model_loader import load
 from model.common import *
 from torch.nn.modules.loss import CrossEntropyLoss
 import numpy as np
-
+from visualazition import *
 
 
 class ZZSP(nn.Module):
-    def __init__(self, config, attributes, classes, offset):
+    def __init__(self, config, attributes, classes, offset, ent_attr, ent_obj):
         super().__init__()
         clip_model, _ = load(config.clip_model, context_length=config.context_length)
         self.clip = clip_model
         self.config = config
         self.attributes = attributes
         self.classes = classes
+        self.dtype = torch.float16
         self.dropout = nn.Dropout(config.dropout)
-        self.token_ids_attr, self.token_ids_obj, self.token_ids, self.soft_att, self.soft_obj, self.soft_att_obj, self.soft_prompt = self.construct_soft_prompt()
+        self.ent_attr = torch.Tensor(list(ent_attr.values()))
+        self.ent_obj = torch.Tensor(list(ent_obj.values()))
+        self.avg_ent_att, self.avg_ent_obj = self.ent_attr.mean(), self.ent_obj.mean()
+        self.token_ids, self.soft_att, self.soft_obj, self.soft_prompt = self.construct_soft_prompt()
         self.offset = offset
         self.enable_pos_emb = True
-        self.loss_fn = CrossEntropyLoss()
-        self.triplet_loss = nn.TripletMarginLoss(margin=1.0, p=2)
-        self.dtype = torch.float16
-        self.text_encoder = CustomTextEncoder(self.clip, self.dtype)
+        self.train_status = "state+object"      ###status in ["object", "state", "object+state"]
+        self.text_encoder = CustomTextEncoder(self.clip, self.dtype, self.attributes, self.classes)
         for p in self.parameters():
             p.requires_grad=False
-
-        self.soft_att = nn.Parameter(self.soft_att)
-        self.soft_obj = nn.Parameter(self.soft_obj)
-        self.soft_att_obj = nn.Parameter(self.soft_att_obj)
-
+        
+        # self.soft_att_dict, self.soft_obj_dict = nn.ParameterDict({}), nn.ParameterDict({})
+        # self.decompose_attr_obj()
+        self.soft_att_obj = nn.ParameterDict({'att': nn.Parameter(self.soft_att), 'obj': nn.Parameter(self.soft_obj)})
+        self.soft_att_fix = self.soft_att_obj['att'].detach().cuda()
+        self.soft_obj_fix = self.soft_att_obj['obj'].detach().cuda()
+        if self.config.update==True:
+            self.update_status(0)
         # self.mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
+        # self.weight = config.res_w
 
-        self.weight = config.res_w
 
+    def decompose_attr_obj(self):
+        #### Rename soft_attr and soft_obj
+        for id, tok in enumerate(self.attributes):
+            self.soft_att_dict[tok] = nn.Parameter(self.soft_att[id])
+        for id, tok in enumerate(self.classes):
+            self.soft_obj_dict[tok] = nn.Parameter(self.soft_obj[id])
 
     def construct_soft_prompt(self):
-        token_ids_obj = clip.tokenize("a photo of x",
-                              context_length=self.config.context_length).cuda()
-        token_ids_attr = clip.tokenize("a photo of x object",
-                              context_length=self.config.context_length).cuda()
-        token_ids = clip.tokenize("a photo of x x",
-                              context_length=self.config.context_length).cuda()
-
-        tokenized = torch.cat(
-            [
-                clip.tokenize(tok, context_length=self.config.context_length)
-                for tok in self.attributes + self.classes
-            ]
-        )
-        orig_token_embedding = self.clip.token_embedding(tokenized.cuda())
-
-        soft_att_obj = torch.zeros(
-            (len(self.attributes) + len(self.classes), orig_token_embedding.size(-1)),
-        )
-        for idx, rep in enumerate(orig_token_embedding):
-            eos_idx = tokenized[idx].argmax()
-            soft_att_obj[idx, :] = torch.mean(rep[1:eos_idx, :], axis=0)
-
+        token_ids = clip.tokenize("a photo of x x", context_length=self.config.context_length).cuda()
 
         #### Construct the prompt for attributes
         tokenized_attr = torch.cat([clip.tokenize(tok, context_length=self.config.context_length) for tok in self.attributes])
@@ -86,7 +76,6 @@ class ZZSP(nn.Module):
             eos_idx = tokenized_obj[idx].argmax()
             soft_obj[idx, :] = torch.mean(rep[1:eos_idx, :], axis=0)
 
-
         #### Construct the prompt for the prefix.
         prefix_init = "a photo of"
         n_ctx = len(prefix_init.split())
@@ -94,7 +83,8 @@ class ZZSP(nn.Module):
         with torch.no_grad():
             embedding = self.clip.token_embedding(prompt)
         prefix_vectors = embedding[0, 1 : 1 + n_ctx, :]
-        return token_ids_attr, token_ids_obj, token_ids, soft_att, soft_obj, soft_att_obj, prefix_vectors
+
+        return token_ids, soft_att, soft_obj, prefix_vectors
 
 
 
@@ -104,17 +94,18 @@ class ZZSP(nn.Module):
         token_tensor = self.clip.token_embedding(
             class_token_ids.cuda()
         ).type(self.clip.dtype)
-        soft_att = self.dropout(self.soft_att)
-        soft_obj = self.dropout(self.soft_obj)
-        # soft_att_obj = self.dropout(self.soft_att_obj)
+
+        soft_att = self.dropout(self.soft_att_obj['att'])
+        soft_obj = self.dropout(self.soft_att_obj['obj'])
 
         eos_idx = int(self.token_ids[0].argmax())
-        token_tensor[:, eos_idx - 2, :] = soft_att[
-            attr_idx
-        ].type(self.clip.dtype)
-        token_tensor[:, eos_idx - 1, :] = soft_obj[
-            obj_idx
-        ].type(self.clip.dtype)
+        
+        # soft_att = torch.stack([self.soft_att_dict[key] for index, key in enumerate(self.soft_att_dict)])
+        # soft_obj = torch.stack([self.soft_obj_dict[key] for index, key in enumerate(self.soft_obj_dict)])
+        # soft_att = self.dropout(soft_att)
+        # soft_obj = self.dropout(soft_obj)
+        token_tensor[:, eos_idx - 2, :] = soft_att[attr_idx].type(self.clip.dtype)
+        token_tensor[:, eos_idx - 1, :] = soft_obj[obj_idx].type(self.clip.dtype)
 
         # adding the correct learnable context
         token_tensor[
@@ -140,49 +131,74 @@ class ZZSP(nn.Module):
         x = self.clip.visual.ln_post(x[:, 0, :])
         if self.clip.visual.proj is not None:
             x = x @ self.clip.visual.proj
+
+        # x_mlp = self.mlp(x.type(torch.float)).type(self.clip.dtype)
+        # x = self.weight * x + (1 - self.weight) * x_mlp
+
         normalized_x = x / x.norm(dim=-1, keepdim=True)
         return normalized_x
 
 
-    def forward(self, batch, idx, status):
-        batch_anchor, batch_attr, batch_obj, batch_target, pos_sample, neg_sample = batch
-        batch_anchor, batch_attr, batch_obj, batch_target, pos_sample, neg_sample = batch_anchor.cuda(), batch_attr.cuda(), batch_obj.cuda(), batch_target.cuda(), pos_sample.cuda(), neg_sample.cuda()
-        b = batch_anchor.shape[0]
-        batch_img = torch.cat([batch_anchor, pos_sample, neg_sample], dim=0)
+    def ent_weight(self, idx):
+        att_idx, obj_idx = idx[:, 0].cpu().numpy(), idx[:, 1].cpu().numpy()
+        w_att = self.ent_attr
+        w_obj = self.ent_obj
+        ent_weight = torch.zeros(len(idx))
+        ent_weight = w_att[att_idx] * w_obj[obj_idx]
+        ent_weight = ent_weight / ent_weight.max()
+        # print(ent_weight)
+        return 2 - 1 *  ent_weight
 
 
+    def update_status(self, epoch):
+        if epoch // self.config.epoch_round % 3 == 0:
+            self.train_status = "object"
+        elif epoch // self.config.epoch_round % 3 == 1:
+            self.train_status = "state"
+        else:
+            if self.train_status != "state+object":
+                self.soft_att_fix = self.soft_att_obj['att'].detach().cuda()
+                self.soft_obj_fix = self.soft_att_obj['obj'].detach().cuda()
+            self.train_status = "state+object"
+
+        if self.train_status == "object":
+            self.soft_att_obj['att'].requires_grad = False
+            self.soft_att_obj['obj'].requires_grad = True
+        elif self.train_status == "state":
+            self.soft_att_obj['att'].requires_grad = True
+            self.soft_att_obj['obj'].requires_grad = False
+        else:
+            self.soft_att_obj['att'].requires_grad = True
+            self.soft_att_obj['obj'].requires_grad = True
+
+
+
+    def forward(self, batch, idx):
+        batch_img, batch_attr, batch_obj, batch_target = batch
+        batch_img, batch_attr, batch_obj, batch_target = batch_img.cuda(), batch_attr.cuda(), batch_obj.cuda(), batch_target.cuda()
+        b = batch_img.shape[0]
 
         #### Image Encoder
         batch_img = self.visual(batch_img.type(self.clip.dtype))   ## bs * 768
-        # batch_img_pos = self.visual(pos_sample.type(self.clip.dtype))
-        # batch_img_neg = self.visual(neg_sample.type(self.clip.dtype))
-
-        if status == "object":
-            self.soft_obj.requires_grad = True
-            self.soft_att.requires_grad = False
-        elif status == "state":
-            self.soft_obj.requires_grad = False
-            self.soft_att.requires_grad = True
-        else:
-            self.soft_obj.requires_grad = True
-            self.soft_att.requires_grad = True           
-        
-        # batch_img_mlp = self.mlp(batch_img.type(torch.float)).type(self.clip.dtype)
-        # batch_img = self.weight * batch_img + (1 - self.weight) * batch_img_mlp
 
         #### Text Encoder
         token_tensors = self.construct_token_tensors(idx)
-        text_features = self.text_encoder(self.token_ids, token_tensors, enable_pos_emb=self.enable_pos_emb)
+        text_features = self.text_encoder(self.token_ids, token_tensors, enable_pos_emb=self.enable_pos_emb, idx=idx)
 
+        ent_weight = self.ent_weight(idx).cuda().type(self.dtype)
         #### Compute Logits and loss
-        logits = (self.clip.logit_scale.exp() * batch_img @ text_features.t())   
-        # logits_pos = (self.clip.logit_scale.exp() * batch_img_pos @ text_features.t())  
-        # logits_neg = (self.clip.logit_scale.exp() * batch_img_neg @ text_features.t())  
-        
-        logits = torch.split(logits, b)
-        logits_anchor, logits_pos, logits_neg = logits[0], logits[1], logits[2]
-        loss_contrastive = self.triplet_loss(logits_anchor, logits_pos, logits_neg)
-        # print(loss_contrastive)        
-        loss = self.loss_fn(logits_anchor, batch_target) + 1 * loss_contrastive
+        logits = self.clip.logit_scale.exp() * batch_img @ text_features.t()  
 
-        return logits_anchor, loss
+        if self.train_status == "state+object":
+            loss_reg = (self.soft_att_fix - self.soft_att_obj['att']).norm(p=1) + (self.soft_obj_fix - self.soft_att_obj['obj']).norm(p=1)
+        else:
+            loss_reg = 0
+
+        # loss = self.loss_fn(logits, batch_target)
+        if self.config.ent_weight == True:
+            loss = F.cross_entropy(logits, batch_target, weight=ent_weight) + 0 * loss_reg
+        else:
+            loss = F.cross_entropy(logits, batch_target) + 0 * loss_reg
+
+
+        return logits, loss

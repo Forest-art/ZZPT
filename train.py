@@ -13,6 +13,7 @@ import torch.nn.functional as F
 from model.zzsp import ZZSP
 from parameters import parser, YML_PATH
 from loss import loss_calu
+from visualazition import Comp_SNE
 
 # from test import *
 import test as test
@@ -39,28 +40,17 @@ def train_model(model, optimizer, config, train_dataset, val_dataset, test_datas
 
     train_losses = []
 
-    status = "object"
-    best_att, best_obj = 0, 0
-    soft_att_init,  soft_obj_init = model.soft_att.clone(), model.soft_obj.clone()
-
+    # print("learning_rate now is: {}".format(optimizer.state_dict()['param_groups']))
+    
     for i in range(config.epoch_start, config.epochs):
         progress_bar = tqdm.tqdm(
             total=len(train_dataloader), desc="epoch % 3d" % (i + 1)
         )
-        # print("learning_rate now is: {}".format(optimizer.state_dict()['param_groups'][0]['lr']))
         epoch_train_losses = []
         for bid, batch in enumerate(train_dataloader):
             # if bid > 1:
             #     break
-            # batch_img = batch[0].cuda()
-            predict, loss = model(batch, train_pairs, status)
-            # deta_soft_att = model.soft_att - soft_att_init
-            # deta_soft_obj = model.soft_obj - soft_obj_init
-
-            # print(torch.norm(deta_soft_att), torch.norm(deta_soft_obj))
-            # if status in ["object", "state"]:
-            #     loss += 0.1 * (2 - (torch.norm(deta_soft_att) + torch.norm(deta_soft_obj)))
-            # loss = loss_calu(predict, batch, config)
+            predict, loss = model(batch, train_pairs)
 
             # normalize loss to account for batch accumulation
             loss = loss / config.gradient_accumulation_steps
@@ -82,96 +72,53 @@ def train_model(model, optimizer, config, train_dataset, val_dataset, test_datas
         train_losses.append(np.mean(epoch_train_losses))
 
         if (i + 1) % config.save_every_n == 0:
-            torch.save(model.state_dict(), os.path.join(config.save_path, f"{config.fusion}_epoch_{i}.pt"))
+            torch.save(model.state_dict(), os.path.join(config.save_path, f"epoch_{i}.pt"))
 
-        # if i < 5:
-        #     continue
+        if i < 10:
+            continue
 
         print("Evaluating val dataset:")
         logging.info("Evaluating val dataset:")
-        loss_avg, val_result = evaluate(model, val_dataset, status)
-        status, best_att, best_obj, best_loss, soft_att_init,  soft_obj_init = update(status, loss_avg, val_result, best_att, best_obj, best_loss, soft_att_init,  soft_obj_init, i)
+        loss_avg, val_result = evaluate(model, val_dataset)
+        if config.update == True:
+            model.update_status(i)
+        print("Now status is {}".format(model.train_status))
+        logging.info("Now status is {}".format(model.train_status))
+
         print("Loss average on val dataset: {}".format(loss_avg))
         print("Evaluating test dataset:")
         logging.info("Evaluating test dataset:")
-        evaluate(model, test_dataset, status)
+        evaluate(model, test_dataset)
         if config.best_model_metric == "best_loss":
             if loss_avg.cpu().float() < best_loss:
                 best_loss = loss_avg.cpu().float()
                 print("Evaluating test dataset:")
-                evaluate(model, test_dataset, status)
+                evaluate(model, test_dataset)
                 torch.save(model.state_dict(), os.path.join(
-                config.save_path, f"{config.fusion}_best.pt"
+                config.save_path, f"best.pt"
             ))
         else:
             if val_result[config.best_model_metric] > best_metric:
                 best_metric = val_result[config.best_model_metric]
                 print("Evaluating test dataset:")
-                evaluate(model, test_dataset, status)
+                evaluate(model, test_dataset)
                 torch.save(model.state_dict(), os.path.join(
-                config.save_path, f"{config.fusion}_best.pt"
+                config.save_path, f"best.pt"
             ))
         if i + 1 == config.epochs:
             print("Evaluating test dataset on Closed World")
-            model.load_state_dict(torch.load(os.path.join(config.save_path, f"{config.fusion}_best.pt")))
-            evaluate(model, test_dataset, status)
+            model.load_state_dict(torch.load(os.path.join(config.save_path, f"best.pt")))
+            evaluate(model, test_dataset)
 
     if config.save_model:
-        torch.save(model.state_dict(), os.path.join(config.save_path, f'final_model_{config.fusion}.pt'))
+        torch.save(model.state_dict(), os.path.join(config.save_path, f'final_model.pt'))
 
 
-
-def update(status, loss, result, best_att, best_obj, best_loss, soft_att_init, soft_obj_init, epoch):
-    # print(status, loss, result, best_att, best_obj, best_loss)
-    # if status == "object":
-    #     if result["obj_acc"] > best_obj:
-    #         best_obj = result["obj_acc"]
-    #     else:
-    #         status = "state"
-    #         best_att, best_obj, best_loss = 0, 0, 0
-    #         soft_att_init,  soft_obj_init = model.soft_att.clone(), model.soft_obj.clone()
-    # elif status == "state":
-    #     if result["attr_acc"] > best_att:
-    #         best_att = result["attr_acc"]
-    #     else:
-    #         status = "att+obj"
-    #         best_att, best_obj, best_loss = 0, 0, 0
-    #         soft_att_init,  soft_obj_init = model.soft_att.clone(), model.soft_obj.clone()
-    # else:
-    #     if loss > best_loss:
-    #         status = "object"
-    #         best_att, best_obj, best_loss = 0, 0, 0
-    #         soft_att_init,  soft_obj_init = model.soft_att.clone(), model.soft_obj.clone()
-    
-
-    if epoch // 5 % 3 == 0:
-        if status != "object":
-            soft_att_init,  soft_obj_init = model.soft_att.clone(), model.soft_obj.clone()
-        status = "object"
-    elif epoch // 5 % 3 == 1:
-        if status != "state":
-            soft_att_init,  soft_obj_init = model.soft_att.clone(), model.soft_obj.clone()
-        status = "state"
-    else:
-        if status != "state+object":
-            soft_att_init,  soft_obj_init = model.soft_att.clone(), model.soft_obj.clone()
-        status = "state + object"
-
-
-    print("Now status is {}".format(status))
-    logging.info("Now status is {}".format(status))
-
-    return status, best_att, best_obj, best_loss, soft_att_init,  soft_obj_init
-
-
-
-
-
-def evaluate(model, dataset, status):
+def evaluate(model, dataset):
     model.eval()
     evaluator = test.Evaluator(dataset, model=None)
     all_logits, all_attr_gt, all_obj_gt, all_pair_gt, loss_avg = test.predict_logits(
-            model, dataset, config, status)
+            model, dataset, config)
     test_stats = test.test(
             dataset,
             evaluator,
@@ -287,10 +234,18 @@ if __name__ == "__main__":
     classes = [cla.replace(".", " ").lower() for cla in allobj]
     attributes = [attr.replace(".", " ").lower() for attr in allattrs]
     offset = len(attributes)
+    ent_attr, ent_obj = train_dataset.ent_attr, train_dataset.ent_obj
 
-    model = ZZSP(config, attributes=attributes, classes=classes, offset=offset).cuda()
-    optimizer = torch.optim.Adam(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
+    model = ZZSP(config, attributes=attributes, classes=classes, offset=offset, ent_attr=ent_attr, ent_obj=ent_obj).cuda()
     
+    # Comp_SNE(model.soft_att_obj['obj'])
+
+    ## Group the parameters into two sets
+    # params_att = [{'params': model.soft_att_dict[key], 'lr': 0.0005} for key in model.soft_att_dict]
+    # params_obj = [{'params': model.soft_obj_dict[key], 'lr': 0.0005} for key in model.soft_obj_dict]
+    # params = params_att + params_obj
+    optimizer = torch.optim.Adam(model.parameters(), lr=config.lr, weight_decay=config.weight_decay)
+
     # if config.load_model is not False:
     #     model.load_state_dict(torch.load(config.load_model))
 
