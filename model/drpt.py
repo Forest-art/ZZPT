@@ -14,7 +14,7 @@ import numpy as np
 from visualazition import *
 
 
-class ZZSP(nn.Module):
+class DRPT(nn.Module):
     def __init__(self, config, attributes, classes, offset, ent_attr, ent_obj):
         super().__init__()
         clip_model, _ = load(config.clip_model, context_length=config.context_length)
@@ -34,7 +34,6 @@ class ZZSP(nn.Module):
         self.text_encoder = CustomTextEncoder(self.clip, self.dtype, self.attributes, self.classes)
         for p in self.parameters():
             p.requires_grad=False
-        
         # self.soft_att_dict, self.soft_obj_dict = nn.ParameterDict({}), nn.ParameterDict({})
         # self.decompose_attr_obj()
         self.soft_att_obj = nn.ParameterDict({'att': nn.Parameter(self.soft_att), 'obj': nn.Parameter(self.soft_obj)})
@@ -42,8 +41,6 @@ class ZZSP(nn.Module):
         self.soft_obj_fix = self.soft_att_obj['obj'].detach().cuda()
         if self.config.update==True:
             self.update_status(0)
-        # self.mlp = MLP(768, 768, 2, True, True, True, True, [1280, 512])
-        # self.weight = config.res_w
 
 
     def decompose_attr_obj(self):
@@ -189,6 +186,7 @@ class ZZSP(nn.Module):
         #### Compute Logits and loss
         logits = self.clip.logit_scale.exp() * batch_img @ text_features.t()  
 
+        loss_reg = 0
         if self.train_status == "state+object":
             loss_reg = (self.soft_att_fix - self.soft_att_obj['att']).norm(p=1) + (self.soft_obj_fix - self.soft_att_obj['obj']).norm(p=1)
         else:

@@ -18,7 +18,7 @@ from utils import *
 from loss import loss_calu
 from parameters import parser, YML_PATH
 from dataset import CompositionDataset
-from model.zzsp import ZZSP
+from model.drpt import DRPT
 
 
 cudnn.benchmark = True

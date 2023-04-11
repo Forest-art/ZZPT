@@ -121,10 +121,11 @@ class CompositionDataset(Dataset):
         self.attr2idx = {attr: idx for idx, attr in enumerate(self.attrs)}
         self.pair2idx = {pair: idx for idx, pair in enumerate(self.pairs)}
 
-        print('# train pairs: %d | # val pairs: %d | # test pairs: %d' % (len(
+        print('# all pairs: %d | # train pairs: %d | # val pairs: %d | # test pairs: %d' % (len(self.pairs), len(
             self.train_pairs), len(self.val_pairs), len(self.test_pairs)))
         print('# train images: %d | # val images: %d | # test images: %d' %
               (len(self.train_data), len(self.val_data), len(self.test_data)))
+        # print('State: {} | Object: {} | Entanglement Averave Rate: {}'.format(len(self.attrs), len(self.objs), len(self.train_pairs) / (len(self.attrs) * len(self.objs))))
 
         self.train_pair_to_idx = dict(
             [(pair, idx) for idx, pair in enumerate(self.train_pairs)]
@@ -155,6 +156,17 @@ class CompositionDataset(Dataset):
         for (attr, obj) in self.train_pairs:
             ent_attr[attr] += 1
             ent_obj[obj] += 1
+        # ent_avg = len(self.train_pairs) / (len(self.attrs) * len(self.objs))
+        # ent_avg_obj, ent_avg_attr = len(self.objs) * ent_avg, len(self.attrs) * ent_avg
+        # ent_attr_var, ent_obj_var = 0, 0
+        # for key in ent_attr:
+        #     ent_attr_var += (ent_attr[key] - ent_avg_attr) * (ent_attr[key] - ent_avg_attr)
+        # ent_attr_var /= len(self.attrs)
+        # for key in ent_obj:
+        #     ent_obj_var += (ent_obj[key] - ent_avg_obj) * (ent_obj[key] - ent_avg_obj)
+        # ent_obj_var /= len(self.objs)
+        # print(ent_attr, ent_obj)
+        # print('Ent_attr_avg: {} | Ent_obj_avg: {} | Ent_attr_var: {} | Ent_obj_var: {}'.format(ent_avg_obj, ent_avg_attr, ent_attr_var, ent_obj_var))
         return ent_attr, ent_obj
 
 

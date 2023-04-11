@@ -10,7 +10,7 @@ import tqdm
 from torch.nn.modules.loss import CrossEntropyLoss
 from torch.utils.data.dataloader import DataLoader
 import torch.nn.functional as F
-from model.zzsp import ZZSP
+from model.drpt import DRPT
 from parameters import parser, YML_PATH
 from loss import loss_calu
 from visualazition import Comp_SNE
@@ -74,8 +74,8 @@ def train_model(model, optimizer, config, train_dataset, val_dataset, test_datas
         if (i + 1) % config.save_every_n == 0:
             torch.save(model.state_dict(), os.path.join(config.save_path, f"epoch_{i}.pt"))
 
-        if i < 10:
-            continue
+        # if i < 10:
+        #     continue
 
         print("Evaluating val dataset:")
         logging.info("Evaluating val dataset:")
@@ -229,6 +229,8 @@ if __name__ == "__main__":
                                        phase='test',
                                        split='compositional-split-natural')
 
+
+
     allattrs = train_dataset.attrs
     allobj = train_dataset.objs
     classes = [cla.replace(".", " ").lower() for cla in allobj]
@@ -236,7 +238,7 @@ if __name__ == "__main__":
     offset = len(attributes)
     ent_attr, ent_obj = train_dataset.ent_attr, train_dataset.ent_obj
 
-    model = ZZSP(config, attributes=attributes, classes=classes, offset=offset, ent_attr=ent_attr, ent_obj=ent_obj).cuda()
+    model = DRPT(config, attributes=attributes, classes=classes, offset=offset, ent_attr=ent_attr, ent_obj=ent_obj).cuda()
     
     # Comp_SNE(model.soft_att_obj['obj'])
 
